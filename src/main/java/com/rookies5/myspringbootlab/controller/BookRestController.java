@@ -6,10 +6,12 @@ import com.rookies5.myspringbootlab.repository.BookRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Profile("legacy")
 @RestController
 @RequestMapping("/api/books")
 public class BookRestController {

@@ -2,6 +2,8 @@ package com.rookies5.myspringbootlab;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 // Security 기능을 자동 설정에서 제외시킵니다.
@@ -9,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
     org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class
 })
+@EntityScan(basePackages = "com.rookies5.myspringbootlab.entity")
+@EnableJpaRepositories(basePackages = "com.rookies5.myspringbootlab.repository")
 public class MyspringbootlabApplication {
     public static void main(String[] args) {
         SpringApplication.run(MyspringbootlabApplication.class, args);
