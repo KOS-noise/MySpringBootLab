@@ -8,8 +8,10 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -102,5 +104,25 @@ public class DefaultExceptionAdvice {
             return HttpStatus.FORBIDDEN; // 403
         }
         return HttpStatus.INTERNAL_SERVER_ERROR; // 500 (기본값) }
+    }
+
+    // @Valid 검증 실패 시 발생하는 에러를 잡아서 깔끔하게 포장해 주는 메서드
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // 발생한 모든 에러를 돌면서 "어떤 필드"가 "무슨 이유"로 틀렸는지 맵에 담기
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("statusCode", HttpStatus.BAD_REQUEST.value()); // 400
+        result.put("message", "Validation Failed");
+        result.put("errors", errors); // 틀린 부분만 쏙쏙 뽑아둔 목록
+
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 }
