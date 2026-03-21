@@ -23,10 +23,4 @@ public class Book {
     private Integer price;
     private LocalDate publishDate;
 
-
-
-
-
-
-
 }
