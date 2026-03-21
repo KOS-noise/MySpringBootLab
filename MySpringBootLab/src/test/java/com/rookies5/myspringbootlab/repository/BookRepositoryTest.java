@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 // JPA 레포지토리 테스트 전용 어노테이션.
-// 내장 DB(H2)를 사용하고, 각 테스트가 끝나면 데이터를 자동으로 싹 지워줘서(Rollback) 안전해!
+// 내장 DB(H2)를 사용하고, 각 테스트가 끝나면 데이터를 자동으로 싹 지워줘서(Rollback) 안전
 @DataJpaTest
 public class BookRepositoryTest {
 

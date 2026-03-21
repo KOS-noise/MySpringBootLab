@@ -1,3 +1,4 @@
+package com.rookies5.myspringbootlab.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +21,7 @@ public class BookDetail {
     private String language;
     private Integer pageCount;
     private String publisher;
-    private String coverImgUrl;
+    private String coverImageUrl;
     private String edition;
 
     /*

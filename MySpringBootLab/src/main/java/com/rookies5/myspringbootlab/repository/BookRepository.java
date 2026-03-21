@@ -4,13 +4,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findByIsbn(String isbn);
-    List<Book> findByAuthor(String author);
+    List<Book> findByAuthorContainingIgnoreCase(String author);
     // 저자 문자열 부분일치, 대소문자 무시 테스트
     List<Book> findByTitleContainingIgnoreCase(String title);
     // 새로운 도서를 등록/수정할 때, 중복된 ISBN 이 있는지 참/거짓 판별
-    boolean existByIsbn(String isbn);
+    boolean existsByIsbn(String isbn);
 
     // sql 쿼리문을 날림
     // JOIN FETCH : 연관된 엔티티(BookDetail)를 한 번의 SQL 쿼리로 함께 묶어와!
