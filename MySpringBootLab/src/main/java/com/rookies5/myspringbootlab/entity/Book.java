@@ -25,7 +25,7 @@ public class Book {
 
     // 2-4 실습문제에 추가된 내용
     // @OneToOne : 두 엔티티가 1:1 관계를 가진다. (예: 책 1권당 상세 정보 1개)
-    @OneToOne(mappedBy = "book") // BookDetail 쪽 book 필드가 관계를 관리한다는 의미
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true) // BookDetail 쪽 book 필드가 관계를 관리한다는 의미
     // FK 컬럼은 Book 테이블에 없고, book_details.book_id에만 존재
     private BookDetail bookDetail;
 
