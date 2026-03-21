@@ -1,6 +1,6 @@
 package com.rookies5.myspringbootlab.service;
 
-import com.rookies5.myspringbootlab.dto.BookDTO;
+import com.rookies5.myspringbootlab.controller.dto.BookDTO;
 import com.rookies5.myspringbootlab.entity.Book;
 import com.rookies5.myspringbootlab.exception.BusinessException;
 import com.rookies5.myspringbootlab.repository.BookRepository;

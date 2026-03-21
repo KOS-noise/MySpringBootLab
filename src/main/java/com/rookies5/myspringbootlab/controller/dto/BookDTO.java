@@ -1,4 +1,4 @@
-package com.rookies5.myspringbootlab.dto;
+package com.rookies5.myspringbootlab.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

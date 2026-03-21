@@ -1,6 +1,6 @@
 package com.rookies5.myspringbootlab.controller;
 
-import com.rookies5.myspringbootlab.dto.BookDTO;
+import com.rookies5.myspringbootlab.controller.dto.BookDTO;
 import com.rookies5.myspringbootlab.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
