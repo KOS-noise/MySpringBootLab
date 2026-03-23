@@ -101,4 +101,83 @@ public class BookService {
                 .orElseThrow(() -> new BusinessException("해당 ID의 도서를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
         bookRepository.delete(book);
     }
+
+    public BookDTO.Response patchBook(Long id, BookDTO.PatchRequest request) {
+        Book book = bookRepository.findByIdWithBookDetail(id)
+                .orElseThrow(() -> new BusinessException("해당 ID의 도서를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        if (request.getTitle() != null) {
+            book.setTitle(request.getTitle());
+        }
+        if (request.getAuthor() != null) {
+            book.setAuthor(request.getAuthor());
+        }
+        if (request.getPrice() != null) {
+            book.setPrice(request.getPrice());
+        }
+        if (request.getPublishDate() != null) {
+            book.setPublishDate(request.getPublishDate());
+        }
+        // ISBN 변경 시에만 중복 검사
+        if (request.getIsbn() != null) {
+            if (!book.getIsbn().equals(request.getIsbn()) && bookRepository.existsByIsbn(request.getIsbn())) {
+                throw new BusinessException("이미 사용 중인 ISBN입니다: " + request.getIsbn(), HttpStatus.CONFLICT);
+            }
+            book.setIsbn(request.getIsbn());
+        }
+        // PATCH /api/books/{id}에서 detailRequest도 같이 받는 경우 처리
+        if (request.getDetailRequest() != null) {
+            BookDetail detail = book.getBookDetail();
+            if (detail == null) {
+                detail = BookDetail.builder().book(book).build();
+                book.setBookDetail(detail);
+            }
+            if (request.getDetailRequest().getDescription() != null) {
+                detail.setDescription(request.getDetailRequest().getDescription());
+            }
+            if (request.getDetailRequest().getLanguage() != null) {
+                detail.setLanguage(request.getDetailRequest().getLanguage());
+            }
+            if (request.getDetailRequest().getPageCount() != null) {
+                detail.setPageCount(request.getDetailRequest().getPageCount());
+            }
+            if (request.getDetailRequest().getPublisher() != null) {
+                detail.setPublisher(request.getDetailRequest().getPublisher());
+            }
+            if (request.getDetailRequest().getCoverImageUrl() != null) {
+                detail.setCoverImageUrl(request.getDetailRequest().getCoverImageUrl());
+            }
+            if (request.getDetailRequest().getEdition() != null) {
+                detail.setEdition(request.getDetailRequest().getEdition());
+            }
+        }
+        return BookDTO.Response.fromEntity(bookRepository.save(book));
+    }
+    public BookDTO.Response patchBookDetail(Long id, BookDTO.BookDetailPatchRequest request) {
+        Book book = bookRepository.findByIdWithBookDetail(id)
+                .orElseThrow(() -> new BusinessException("해당 ID의 도서를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        BookDetail detail = book.getBookDetail();
+        if (detail == null) {
+            detail = BookDetail.builder().book(book).build();
+            book.setBookDetail(detail);
+        }
+        if (request.getDescription() != null) {
+            detail.setDescription(request.getDescription());
+        }
+        if (request.getLanguage() != null) {
+            detail.setLanguage(request.getLanguage());
+        }
+        if (request.getPageCount() != null) {
+            detail.setPageCount(request.getPageCount());
+        }
+        if (request.getPublisher() != null) {
+            detail.setPublisher(request.getPublisher());
+        }
+        if (request.getCoverImageUrl() != null) {
+            detail.setCoverImageUrl(request.getCoverImageUrl());
+        }
+        if (request.getEdition() != null) {
+            detail.setEdition(request.getEdition());
+        }
+        return BookDTO.Response.fromEntity(bookRepository.save(book));
+    }
 }

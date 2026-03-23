@@ -68,4 +68,18 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
+
+    // PATCH 메서드 추가
+    @PatchMapping("/{id}")
+    public ResponseEntity<BookDTO.Response> patchBook(
+            @PathVariable Long id,
+            @Valid @RequestBody BookDTO.PatchRequest request) {
+        return ResponseEntity.ok(bookService.patchBook(id, request));
+    }
+    @PatchMapping("/{id}/detail")
+    public ResponseEntity<BookDTO.Response> patchBookDetail(
+            @PathVariable Long id,
+            @Valid @RequestBody BookDTO.BookDetailPatchRequest request) {
+        return ResponseEntity.ok(bookService.patchBookDetail(id, request));
+    }
 }
