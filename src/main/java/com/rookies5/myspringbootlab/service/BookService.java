@@ -15,6 +15,10 @@ import java.util.List;
 public class BookService {
     private final BookRepository bookRepository;
     public BookDTO.Response createBook(BookDTO.Request request) {
+        if (bookRepository.existsByIsbn(request.getIsbn())) {
+            throw new BusinessException("이미 사용 중인 ISBN입니다: " + request.getIsbn(), HttpStatus.CONFLICT);
+        }
+
         Book book = Book.builder()
                 .title(request.getTitle())
                 .author(request.getAuthor())
@@ -73,6 +77,11 @@ public class BookService {
     public BookDTO.Response updateBook(Long id, BookDTO.Request request) {
         Book existingBook = bookRepository.findByIdWithBookDetail(id)
                 .orElseThrow(() -> new BusinessException("해당 ID의 도서를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+
+        if (!existingBook.getIsbn().equals(request.getIsbn()) && bookRepository.existsByIsbn(request.getIsbn())) {
+            throw new BusinessException("이미 사용 중인 ISBN입니다: " + request.getIsbn(), HttpStatus.CONFLICT);
+        }
+
         existingBook.setTitle(request.getTitle());
         existingBook.setAuthor(request.getAuthor());
         existingBook.setIsbn(request.getIsbn());

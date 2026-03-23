@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,8 +20,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -60,6 +63,22 @@ public class DefaultExceptionAdvice {
     protected ResponseEntity<Object> handleException(HttpMessageNotReadableException e) {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("message", e.getMessage());
+        result.put("httpStatus", HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<Object> handleException(MethodArgumentNotValidException e) {
+        List<String> errors = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "입력값 유효성 검사 실패");
+        result.put("errors", errors);
         result.put("httpStatus", HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);

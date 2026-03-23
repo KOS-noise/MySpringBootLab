@@ -16,6 +16,7 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(String message, HttpStatus httpStatus) {
+        super(message);
         // 입력받은 메시지와 상태 코드로 초기화
         this.message = message;
         this.httpStatus = httpStatus;
