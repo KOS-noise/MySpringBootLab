@@ -121,4 +121,34 @@ public class BookDTO {
         private String coverImageUrl;
         private String edition;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PatchRequest {
+        private String title;
+        private String author;
+        @Pattern(regexp = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$",
+                message = "ISBN must be valid (10 or 13 digits, with or without hyphens)")
+        private String isbn;
+        @PositiveOrZero(message = "Price must be positive or zero")
+        private Integer price;
+        @Past(message = "Publish date must be in the past")
+        private LocalDate publishDate;
+        @Valid
+        private BookDetailPatchRequest detailRequest;
+    }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BookDetailPatchRequest {
+        private String description;
+        private String language;
+        private Integer pageCount;
+        private String publisher;
+        private String coverImageUrl;
+        private String edition;
+    }
 }
